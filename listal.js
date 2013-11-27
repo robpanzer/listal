@@ -1,4 +1,4 @@
-#!/usr/bin/local node
+#! /usr/bin/env node
 
 var fs = require('fs');
 var exec = require('child_process').exec
@@ -23,11 +23,11 @@ else
   urlID = urlParts[urlParts.length - 1]
 
 var urlTemplate = argv.u + "/pictures/$page"
-var baseTargetPath = argv.o + '/' + urlID
+  , baseTargetPath = argv.o + '/' + urlID
 
-console.log ("### Listal scanner ###")
-console.log ("Using url:\t" + argv.u)
-console.log ("Dumping contents into :\t" + baseTargetPath)
+console.log ("### Listal scanner ###\n")
+console.log ("Using url\t\t:" + argv.u)
+console.log ("Dumping contents into \t\t:" + baseTargetPath + "\n")
 
 
 try {
@@ -49,11 +49,8 @@ var downloadTemplate = "http://ilarge.listal.com/image/$id/10000full-$name.jpg"
 
 var picturePattern = /http:\/\/www.listal.com\/viewimage\/(\d+)/g
 
-//console.log("Using name:" + urlID)
-//console.log("Using template:" + urlTemplate)
-
 var i = 1
-  , concurrentPageLimit = 5
+  , concurrentPageLimit = 2
   , imagesDownloaded = 0
   , lastImagesDownloaded = 0
   , pageSize = 20
@@ -80,7 +77,6 @@ function getNextPage() {
 
 }
 
-
 function processResult(res) {
 
   console.log("Fetched page:" + res.req.path)
@@ -88,8 +84,6 @@ function processResult(res) {
   res.on("data", function(chunk) {
     match = picturePattern.exec(chunk)
     while (match != null) {
-
-
       downloadFile(downloadTemplate.replace('$id',match[1]), match[1])
       match = picturePattern.exec(chunk)
     }
