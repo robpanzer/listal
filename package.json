@@ -1,10 +1,22 @@
 {
   "name": "listall",
+  "description" : "pictures download bot for listal.com",
+  "preferGlobal": true,
   "author": "vmrmonteiro@gmail.com",
   "version": "0.0.1",
   "main": "listal.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bitoiu/listal.git"
+  },
+  "keywords": [
+    "listal",
+    "download",
+    "pictures",
+    "crawler"
+  ],
   "dependencies": {
     "optimist": "0.6.0"
   },
-  "engine": "node >= 0.8.12"
+  "engine": "node >= 0.8"
 }
