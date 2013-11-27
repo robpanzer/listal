@@ -15,7 +15,7 @@ listal -u http://www.listal.com/movie/inception
 If you want all the pictures from the director:
 
 ```bash
- listal -u http://www.listal.com/christopher-nolan
+listal -u http://www.listal.com/christopher-nolan
 ```
 
 Or if you are on the naughty side and want the pictures of diCaprio or Ellen Page try:
