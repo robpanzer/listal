@@ -6,7 +6,7 @@
     "listal" : "listal.js"
   },
   "author": "vmrmonteiro@gmail.com",
-  "version": "0.1.2",
+  "version": "0.1.10",
   "main": "listal.js",
   "repository": {
     "type": "git",

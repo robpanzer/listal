@@ -22,7 +22,7 @@ if (urlParts[urlParts.length - 1] == "")
 else
   urlID = urlParts[urlParts.length - 1]
 
-var urlTemplate = argv.u + "/pictures/$page"
+var urlTemplate = argv.u + "//pictures/$page"
   , baseTargetPath = argv.o + '/' + urlID
 
 console.log ("### Listal scanner ###\n")
