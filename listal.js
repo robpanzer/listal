@@ -1,64 +1,109 @@
 #!/usr/bin/local node
 
-const DOWNLOAD_DIR = "./target2"
-
+var fs = require('fs');
 var exec = require('child_process').exec
-var http = require('http');
-var url = require('url');
+var http = require('http')
+var url = require('url')
 var argv = require('optimist')
-  .usage('Usage: ./listall.js -n name')
-  .demand(['n'])
-  .argv;
+  .usage('Usage: ./listall.js -u url')
+  .demand(['u'])
+  .default('o', 'target')
+  .alias('o', 'outputDir')
+  .alias('u', 'url')
+  .argv
 
-var urlTemplate = "http://www.listal.com/$name/pictures//$page"
-  .replace('$name',argv.n)
 
+// getId for url
+var urlParts = argv.u.split('/')
+  , urlID
+
+if (urlParts[urlParts.length - 1] == "")
+  urlID = urlParts[urlParts.length - 2]
+else
+  urlID = urlParts[urlParts.length - 1]
+
+var urlTemplate = argv.u + "/pictures/$page"
+var baseTargetPath = argv.o + '/' + urlID
+
+console.log ("### Listal scanner ###")
+console.log ("Using url:\t" + argv.u)
+console.log ("Dumping contents into :\t" + baseTargetPath)
+
+
+try {
+  stats = fs.lstatSync(argv.o)
+}
+catch (e) {
+  fs.mkdirSync(argv.o)
+}
+
+try {
+  stats = fs.lstatSync(baseTargetPath)
+}
+catch (e) {
+  fs.mkdirSync(baseTargetPath)
+}
 
 var downloadTemplate = "http://ilarge.listal.com/image/$id/10000full-$name.jpg"
-  .replace('$name',argv.n)
+  .replace('$name',urlID)
 
 var picturePattern = /http:\/\/www.listal.com\/viewimage\/(\d+)/g
 
-console.log("Using name:" + argv.n)
-console.log("Using template:" + urlTemplate)
+//console.log("Using name:" + urlID)
+//console.log("Using template:" + urlTemplate)
 
 var i = 1
+  , concurrentPageLimit = 5
+  , imagesDownloaded = 0
+  , lastImagesDownloaded = 0
+  , pageSize = 20
 
-while (i <= 15) {
+for (var j = 0 ; j < concurrentPageLimit ; j++ ) { getNextPage()}
 
-  var currentURL = urlTemplate.replace('$page', i)
-  console.log("Fetching " + currentURL);
+setInterval(function() {
+  if (lastImagesDownloaded == imagesDownloaded) {
+    console.log("No images downloaded for 5 seconds, quitting. " + imagesDownloaded + " images downloaded for " + urlID)
+    process.exit(0)
+  }
+  lastImagesDownloaded = imagesDownloaded
+}, 5000)
+
+
+function getNextPage() {
+
+  var currentURL = urlTemplate.replace('$page', i++)
   var request = http.get(currentURL, processResult)
 
   request.on('error', function(e) {
-      console.log("Got error: " + e.message);
+    console.log("Got error: " + e.message)
   })
-  request.setTimeout(60000, function() { console.log("Custom timeout")})
 
-
-  i++
 }
+
 
 function processResult(res) {
 
+  console.log("Fetched page:" + res.req.path)
+
   res.on("data", function(chunk) {
-    match = picturePattern.exec(chunk);
+    match = picturePattern.exec(chunk)
     while (match != null) {
-      download_file_wget(downloadTemplate.replace('$id',match[1]), match[1])
-      match = picturePattern.exec(chunk);
+
+
+      downloadFile(downloadTemplate.replace('$id',match[1]), match[1])
+      match = picturePattern.exec(chunk)
     }
-  });
+  })
 }
 
-var download_file_wget = function(file_url, id) {
+function downloadFile(file_url, id) {
 
-  // extract the file name
-  var file_name = url.parse(file_url).pathname.split('/').pop();
-  // compose the wget command
-  var wget = 'curl -o target2/' + id + '.jpg ' + file_url;
-
-  var child = exec(wget, function(err, stdout, stderr) {
-    if (err) throw err;
-    else console.log(file_url + ' downloaded to ' + DOWNLOAD_DIR);
-  });
-};
+  var targetFileName = argv.o + '/' + urlID + '/' + id + '.jpg'
+  var curl = 'curl -o ' + targetFileName  + ' ' + file_url
+  var child = exec(curl, function(err, stdout, stderr) {
+    if (err) throw err
+    else console.log(file_url + ' downloaded to ' + targetFileName)
+    imagesDownloaded++
+    if(imagesDownloaded % pageSize == 0) getNextPage()
+  })
+}

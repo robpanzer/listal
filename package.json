@@ -2,8 +2,9 @@
   "name": "listall",
   "author": "vmrmonteiro@gmail.com",
   "version": "0.0.1",
+  "main": "listal.js",
   "dependencies": {
     "optimist": "0.6.0"
   },
-  "engine": "node >= 0.8"
+  "engine": "node >= 0.8.12"
 }
