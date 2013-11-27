@@ -5,7 +5,7 @@ var exec = require('child_process').exec
 var http = require('http')
 var url = require('url')
 var argv = require('optimist')
-  .usage('Usage: ./listall.js -u url')
+  .usage('Usage: ./listall.js -u url\nDo not append the pictures path in the end')
   .demand(['u'])
   .default('o', 'target')
   .alias('o', 'outputDir')

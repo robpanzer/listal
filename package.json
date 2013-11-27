@@ -1,6 +1,6 @@
 {
   "name": "listal",
-  "description" : "pictures download bot for listal.com",
+  "description" : "bot to download pictures from listal.com",
   "preferGlobal": "true",
   "bin": {
     "listal" : "listal.js"
