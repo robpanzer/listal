@@ -54,16 +54,18 @@ var i = 1
   , imagesDownloaded = 0
   , lastImagesDownloaded = 0
   , pageSize = 20
+  , imageDownloadTimeout = 5000
+
 
 for (var j = 0 ; j < concurrentPageLimit ; j++ ) { getNextPage()}
 
 setInterval(function() {
   if (lastImagesDownloaded == imagesDownloaded) {
-    console.log("No images downloaded for 5 seconds, quitting. " + imagesDownloaded + " images downloaded for " + urlID)
+    console.log("No images downloaded for " + (imageDownloadTimeout / 1000) + " seconds, quitting. " + imagesDownloaded + " images downloaded for " + urlID)
     process.exit(0)
   }
   lastImagesDownloaded = imagesDownloaded
-}, 5000)
+}, imageDownloadTimeout)
 
 
 function getNextPage() {
