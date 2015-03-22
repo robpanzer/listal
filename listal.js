@@ -1,4 +1,4 @@
-#! /usr/bin/env node
+#! /usr/bin/js
 
 var fs = require('fs');
 var exec = require('child_process').exec
