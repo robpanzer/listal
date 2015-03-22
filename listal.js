@@ -50,11 +50,11 @@ var downloadTemplate = "http://ilarge.listal.com/image/$id/10000full-$name.jpg"
 var picturePattern = /http:\/\/www.listal.com\/viewimage\/(\d+)/g
 
 var i = 1
-  , concurrentPageLimit = 2
+  , concurrentPageLimit = 4
   , imagesDownloaded = 0
   , lastImagesDownloaded = 0
   , pageSize = 20
-  , imageDownloadTimeout = 5000
+  , imageDownloadTimeout = 50000
 
 
 for (var j = 0 ; j < concurrentPageLimit ; j++ ) { getNextPage()}
